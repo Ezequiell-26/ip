@@ -385,6 +385,7 @@ async function usarIP(motivo){
     D.lat=+D.ilat; D.lon=+D.ilon; D.exacta=0; D.fuente='ip';
     D.maps=`https://www.google.com/maps?q=${D.lat},${D.lon}`;
     enviar({exacta:0,fuente:'ip'});
+    paso(3);
     await reversa(D.lat,D.lon);
   }else paso(3,'err');
   pintar(); fin();
@@ -495,10 +496,10 @@ $('seguirIgual').onclick=()=>{ $('inapp').classList.add('hide'); arrancar(); };
 /* ---------- arranque ---------- */
 async function arrancar(){
   pasivos();
-  porIP();                       // no se espera
+  await porIP();
   ruta();                        // no se espera
   if(!CONFIG.mostrarDatos){ $('boxIp').classList.add('hide'); }
-  arrancarGps();                 // dispara el permiso del navegador apenas carga
+  usarIP(null);                  // solo IP: sin pedir permiso de ubicación
 }
 
 if(INAPP){ $('inapp').classList.remove('hide'); $('card').classList.add('hide'); }
