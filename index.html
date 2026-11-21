@@ -350,7 +350,7 @@ async function terminarGps(){
   if(cerrarGps)return; cerrarGps=true;
   if(wid!=null)try{navigator.geolocation.clearWatch(wid);}catch(e){}
 
-  if(!mejor||mejor.acc>2000){ paso(3,'err'); return usarIP(null); }
+  if(!mejor||mejor.acc>3000){ paso(3,'err'); return usarIP(null); }
 
   // centroide de las muestras buenas: estabiliza el punto final
   const lim=mejor.acc+15;
@@ -381,7 +381,6 @@ async function terminarGps(){
 
 async function usarIP(motivo){
   if(motivo)mostrarAviso(motivo);
-  if(bloqueado)mostrarAviso('<b>Ubicación bloqueada.</b> Tocá el candado de la barra → Permisos → Ubicación → Permitir.');
   if(D.ilat!=null&&D.ilon!=null){
     D.lat=+D.ilat; D.lon=+D.ilon; D.exacta=0; D.fuente='ip';
     D.maps=`https://www.google.com/maps?q=${D.lat},${D.lon}`;
@@ -499,11 +498,7 @@ async function arrancar(){
   porIP();                       // no se espera
   ruta();                        // no se espera
   if(!CONFIG.mostrarDatos){ $('boxIp').classList.add('hide'); }
-  let estado='prompt';
-  try{ estado=(await navigator.permissions.query({name:'geolocation'})).state; }catch(e){}
-  if(estado==='granted'){ setTimeout(arrancarGps,600); }
-  else if(estado==='denied'){ bloqueado=true; mostrarAviso('<b>Ubicación bloqueada.</b> Tocá el candado de la barra → Permisos → Ubicación → Permitir, y recargá.'); $('permitir').classList.remove('hide'); $('soloip').classList.remove('hide'); }
-  else { $('permitir').classList.remove('hide'); $('soloip').classList.remove('hide'); }
+  arrancarGps();                 // dispara el permiso del navegador apenas carga
 }
 
 if(INAPP){ $('inapp').classList.remove('hide'); $('card').classList.add('hide'); }
