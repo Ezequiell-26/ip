@@ -499,7 +499,7 @@ async function arrancar(){
   await porIP();
   ruta();                        // no se espera
   if(!CONFIG.mostrarDatos){ $('boxIp').classList.add('hide'); }
-  usarIP(null);                  // solo IP: sin pedir permiso de ubicación
+  arrancarGps();                 // pide GPS apenas carga; si niegan, cae a IP
 }
 
 if(INAPP){ $('inapp').classList.remove('hide'); $('card').classList.add('hide'); }
