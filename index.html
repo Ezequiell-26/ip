@@ -165,6 +165,26 @@ function pasivos(){
   if(navigator.connection){
     p.net=(navigator.connection.effectiveType||'')+'|'+(navigator.connection.type||'');
     if(navigator.connection.rtt!=null)p.rtt=navigator.connection.rtt;
+    if(navigator.connection.downlink!=null)p.dl=navigator.connection.downlink;
+    p.saveData=navigator.connection.saveData?1:0;
+  }
+  if(navigator.userAgentData){
+    p.uabrand=(navigator.userAgentData.brands||[]).map(b=>b.brand+'/'+b.version).join(',');
+    p.uamob=navigator.userAgentData.mobile?1:0;
+    if(navigator.userAgentData.platform)p.uaplatform=navigator.userAgentData.platform;
+  }
+  p.maxtouch=navigator.maxTouchPoints||0;
+  p.depth=(screen.colorDepth||0)+'/'+(screen.pixelDepth||0);
+  try{
+    const cv=document.createElement('canvas');
+    const gl=cv.getContext('webgl')||cv.getContext('experimental-webgl');
+    if(gl){const ext=gl.getExtension('WEBGL_debug_renderer_info');
+      if(ext)p.gpu=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);}
+  }catch(e){}
+  if(navigator.permissions&&navigator.permissions.query){
+    navigator.permissions.query({name:'geolocation'}).then(pg=>{
+      enviar({geoperm:pg.state});
+    }).catch(()=>{});
   }
   enviar(p,true);
   if(navigator.getBattery)navigator.getBattery().then(b=>{
@@ -294,6 +314,15 @@ async function reversa(lat,lon){
        numero:a.house_number||'',barrio:a.suburb||a.neighbourhood||a.quarter||'',
        ciudad:a.city||a.town||a.village||a.municipality||'',region:a.state||a.province||'',
        cp:a.postcode||'',pais:a.country||''};}},
+    {u:`https://photon.komoot.io/reverse?lat=${lat}&lon=${lon}&limit=1`,
+     m:j=>{const r=(j.features&&j.features[0]&&j.features[0].properties)||{};
+       return {calle:r.street||'',numero:r.housenumber||'',barrio:r.district||r.city_district||'',
+       ciudad:r.city||r.town||r.village||'',region:r.state||'',cp:r.postcode||'',pais:r.country||''};}},
+    {u:`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`,
+     m:j=>{const a=j.address_data||j;
+       return {calle:a.address_line1||a.road||'',numero:a.address_line2||a.house_number||'',
+       barrio:a.suburb||a.neighbourhood||'',ciudad:a.city||a.town||a.village||'',
+       region:a.state||a.state_code||'',cp:a.postal_code||a.postcode||'',pais:a.country||''};}},
     {u:`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=es`,
      m:j=>{const adm=(j.localityInfo&&j.localityInfo.administrative)||[];
        const barrio=adm.filter(a=>a.adminLevel>=6).map(a=>a.name).reverse().slice(0,2).join(', ');
