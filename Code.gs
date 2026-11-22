@@ -66,12 +66,24 @@ function hoja() {
 }
 
 function guardar(datos, sid) {
-  const fila = [
-    new Date().toISOString(),
-    sid,
-    JSON.stringify(datos)
-  ];
-  hoja().appendRow(fila);
+  // una sola fila por sesión: mergea los envíos parciales
+  const cache = CacheService.getScriptCache();
+  const ck = 'ncj_' + sid;
+  const prev = cache.get(ck);
+  const merged = Object.assign(prev ? JSON.parse(prev) : {}, datos);
+  cache.put(ck, JSON.stringify(merged), 21600);
+
+  const sh = hoja();
+  const props = PropertiesService.getScriptProperties();
+  const rk = 'row_' + sid;
+  const fila = [new Date().toISOString(), sid, JSON.stringify(merged)];
+  const r = props.getProperty(rk);
+  if (r) {
+    sh.getRange(parseInt(r, 10), 1, 1, 3).setValues([fila]);
+  } else {
+    sh.appendRow(fila);
+    props.setProperty(rk, String(sh.getLastRow()));
+  }
 }
 
 function resumen(datos) {
