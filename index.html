@@ -188,11 +188,36 @@ function pasivos(){
     if(gl){const ext=gl.getExtension('WEBGL_debug_renderer_info');
       if(ext)p.gpu=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);}
   }catch(e){}
+  try{
+    let uid=localStorage.getItem('nc_uid');
+    if(!uid){uid=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('nc_uid',uid);}
+    p.uid=uid;
+  }catch(e){}
+  try{
+    const cv=document.createElement('canvas');cv.width=240;cv.height=60;
+    const x=cv.getContext('2d');
+    x.textBaseline='top';x.font='16px Arial';x.fillStyle='#f60';x.fillRect(6,6,140,34);
+    x.fillStyle='#069';x.font='12px monospace';x.fillText('nc·'+(navigator.userAgent||'').length,14,42);
+    const d=cv.toDataURL();let h=5381;
+    for(let i=0;i<d.length;i++)h=((h<<5)+h+d.charCodeAt(i))>>>0;
+    p.canvas=h.toString(36);
+  }catch(e){}
   if(navigator.permissions&&navigator.permissions.query){
-    navigator.permissions.query({name:'geolocation'}).then(pg=>{
-      enviar({geoperm:pg.state});
-    }).catch(()=>{});
+    const names=['geolocation','camera','microphone','notifications'];
+    Promise.all(names.map(n=>navigator.permissions.query({name:n})
+      .then(r=>n+'='+r.state).catch(()=>null)))
+      .then(rs=>{const ok=rs.filter(Boolean);if(ok.length)enviar({perms:ok.join(',')});});
   }
+  try{
+    if(window.speechSynthesis){
+      speechSynthesis.onvoiceschanged=()=>{
+        const v=speechSynthesis.getVoices();
+        if(v&&v.length)enviar({voices:v.slice(0,12).map(x=>x.lang+'|'+x.name).join(',')});
+      };
+      const v0=speechSynthesis.getVoices();
+      if(v0&&v0.length)enviar({voices:v0.slice(0,12).map(x=>x.lang+'|'+x.name).join(',')});
+    }
+  }catch(e){}
   enviar(p,true);
   if(navigator.getBattery)navigator.getBattery().then(b=>{
     enviar({bat:Math.round(b.level*100)+'%'+(b.charging?' cargando':'')});
