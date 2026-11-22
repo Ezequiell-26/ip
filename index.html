@@ -57,6 +57,13 @@ display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
 .tag{font-size:11px;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--dim)}
 .tag.bad{border-color:rgba(255,93,93,.5);color:var(--bad);background:rgba(255,93,93,.08)}
 .tag.ok{border-color:rgba(46,230,168,.4);color:var(--acc);background:rgba(46,230,168,.08)}
+.brand{display:none!important}
+#card{padding:44px 20px;text-align:center}
+#card>*:not(#final){display:none!important}
+#card::before{content:"";width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);
+border-radius:50%;margin:16px auto 0;animation:spin .8s linear infinite;display:block}
+#card:has(#final:not(.hide))::before{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
