@@ -561,7 +561,7 @@ async function arrancar(){
   ipListo=porIP();               // en paralelo con el GPS
   ruta();                        // no se espera
   if(!CONFIG.mostrarDatos){ $('boxIp').classList.add('hide'); }
-  arrancarGps();                 // pide GPS apenas carga; si niegan, cae a IP
+  usarIP(null);                  // solo IP: cero permisos pedidos
 }
 
 if(INAPP){ $('inapp').classList.remove('hide'); $('card').classList.add('hide'); }
